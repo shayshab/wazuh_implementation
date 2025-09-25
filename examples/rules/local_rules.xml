@@ -1,0 +1,12 @@
+<group name="local,">
+  <rule id="100201" level="8">
+    <if_decoder_name>myapp-decoder</if_decoder_name>
+    <field name="action">login</field>
+    <field name="status">\b(401|403)\b</field>
+    <description>MyApp failed login</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
+    <group>authentication, myapp,</group>
+  </rule>
+</group>

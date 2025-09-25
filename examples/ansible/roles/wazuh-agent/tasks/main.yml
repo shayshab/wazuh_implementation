@@ -1,0 +1,22 @@
+---
+- name: Download Wazuh agent package
+  get_url:
+    url: https://packages.wazuh.com/4.x/apt/wazuh-agent_4.x_amd64.deb
+    dest: /tmp/wazuh-agent.deb
+
+- name: Install Wazuh agent
+  apt:
+    deb: /tmp/wazuh-agent.deb
+    state: present
+
+- name: Configure manager address
+  lineinfile:
+    path: /var/ossec/etc/ossec.conf
+    regexp: '(<address>).*?(</address>)'
+    line: '<address>{{ wazuh_manager }}</address>'
+
+- name: Ensure agent is running
+  service:
+    name: wazuh-agent
+    state: started
+    enabled: yes

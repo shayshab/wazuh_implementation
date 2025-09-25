@@ -1,0 +1,41 @@
+{
+  "policy": {
+    "description": "Wazuh alerts ILM: hot->warm->cold->delete",
+    "default_state": "hot",
+    "states": [
+      {
+        "name": "hot",
+        "actions": [
+          { "rollover": { "min_size": "40gb", "min_age": "7d" } }
+        ],
+        "transitions": [
+          { "state_name": "warm", "conditions": { "min_index_age": "14d" } }
+        ]
+      },
+      {
+        "name": "warm",
+        "actions": [
+          { "replica_count": { "number_of_replicas": 1 } },
+          { "forcemerge": { "max_num_segments": 1 } }
+        ],
+        "transitions": [
+          { "state_name": "cold", "conditions": { "min_index_age": "60d" } }
+        ]
+      },
+      {
+        "name": "cold",
+        "actions": [
+          { "read_only": {} }
+        ],
+        "transitions": [
+          { "state_name": "delete", "conditions": { "min_index_age": "365d" } }
+        ]
+      },
+      {
+        "name": "delete",
+        "actions": [ { "delete": {} } ],
+        "transitions": []
+      }
+    ]
+  }
+}

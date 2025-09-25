@@ -1,0 +1,5 @@
+<decoder name="myapp-decoder">
+  <prematch>myapp:</prematch>
+  <regex offset="after_prematch">client=(\S+) action=(\S+) status=(\d+)</regex>
+  <order>client,action,status</order>
+</decoder>

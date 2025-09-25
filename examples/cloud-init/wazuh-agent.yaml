@@ -1,0 +1,8 @@
+#cloud-config
+packages:
+  - curl
+  - jq
+runcmd:
+  - curl -sO https://packages.wazuh.com/4.x/apt/wazuh-agent_4.x_amd64.deb
+  - WAZUH_MANAGER="<manager_ip>" dpkg -i wazuh-agent_4.x_amd64.deb || true
+  - systemctl enable --now wazuh-agent

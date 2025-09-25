@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: wazuh-agent
+  labels:
+    app: wazuh-agent
+spec:
+  selector:
+    matchLabels:
+      app: wazuh-agent
+  template:
+    metadata:
+      labels:
+        app: wazuh-agent
+    spec:
+      containers:
+      - name: agent
+        image: wazuh/wazuh-agent:4.8.0
+        env:
+        - name: WAZUH_MANAGER
+          value: "wazuh-manager"
+        - name: WAZUH_AGENT_GROUP
+          value: "k8s-nodes"
+        securityContext:
+          runAsUser: 0
+        resources:
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+          requests:
+            cpu: "50m"
+            memory: "128Mi"
+        volumeMounts:
+        - name: var-ossec
+          mountPath: /var/ossec
+      volumes:
+      - name: var-ossec
+        emptyDir: {}
